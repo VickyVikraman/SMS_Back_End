@@ -1,7 +1,7 @@
 
 amazonProperties:
-  endpointUrl: s3.ap-south-1.amazonaws.com/alumni-management-system/SMS/Files/StudentUpload/
+  endpointUrl: s3.ap-south-1.amazonaws.com/BUCKETNAME/
 #  endpointUrl: https://855898191720.signin.aws.amazon.com/console
-  accessKey: AKIA4OR4B65UMRWAZAXB
-  secretKey: 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
-  bucketName: alumni-management-system
+  accessKey: ********
+  secretKey: ********
+  bucketName: bucketName

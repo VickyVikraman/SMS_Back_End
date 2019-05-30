@@ -4,9 +4,22 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.NaturalId;
@@ -26,13 +39,14 @@ public class Login {
 		
 	}
     public Login(@NotBlank @Size(max = 40) String name, @NotBlank @Size(max = 15) String username,
-			@NotBlank @Size(max = 100) String password, @NotBlank @Size(max = 40) @Email String email, @NotBlank Boolean newUser) {
+			@NotBlank @Size(max = 100) String password, @NotBlank @Size(max = 40) @Email String email, @NotNull Boolean newUser, RoleName role) {
 		super();
 		this.name = name;
 		this.username = username;
 		this.password = password;
 		this.email = email;
 		this.newUser = newUser;
+		this.role = role;
 	}
 
 	@Id
@@ -57,6 +71,7 @@ public class Login {
     @Email
 	private String email;
     
+    @NotNull
     @Column(name = "newuser")
     private Boolean newUser;
     
@@ -65,6 +80,10 @@ public class Login {
     
     @Column(name="token_expiry_at")
     private Date tokenExpiryAt;
+    
+    @Enumerated(EnumType.STRING)
+    private RoleName role;
+    
 	
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
@@ -141,7 +160,11 @@ public class Login {
 	public void setTokenExpiryAt(Date date) {
 		this.tokenExpiryAt = date;
 	}
+	public RoleName getRole() {
+		return role;
+	}
+	public void setRole(RoleName role) {
+		this.role = role;
+	}
 	
-	
-  
 }

@@ -57,19 +57,18 @@ public class SignUpService {
 
         // Creating user's account
         Login user = new Login(signUpRequest.getName(), signUpRequest.getUsername(),
-        		signUpRequest.getPassword(),signUpRequest.getEmail(), signUpRequest.getNewUser());
-
+        		signUpRequest.getPassword(),signUpRequest.getEmail(), signUpRequest.getNewUser(),RoleName.ROLE_HOD);
+        
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        Role userRole = roleRepository.findByName(RoleName.ROLE_ADMIN).orElseThrow(() -> new AppException("User Role Not set"));
-
+        Role userRole = roleRepository.findByName(RoleName.ROLE_HOD).orElseThrow(() -> new AppException("User Role Not set"));
         user.setRoles(Collections.singleton(userRole));
 
-        Login result = loginRepository.save(user);
-
+        loginRepository.save(user);
+        
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/api/users/{username}")
-                .buildAndExpand(result.getUsername()).toUri();
+                .buildAndExpand(signUpRequest.getUsername()).toUri();
         return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
 	}
 	
@@ -97,9 +96,9 @@ public class SignUpService {
 			        student.setEmail(studentLogin.getEmail());
 			        emailList.add(studentLogin.getEmail());
 			        student.setPassword(passwordEncoder.encode(studentLogin.getPassword()));
-			        
+			        student.setNewUser(true);
 			        Role userRole = roleRepository.findByName(RoleName.ROLE_STUDENT).orElseThrow(() -> new AppException("User Role Not set"));
-
+			        student.setRole(RoleName.ROLE_STUDENT);
 			        student.setRoles(Collections.singleton(userRole));
 			        
 			        loginRepository.save(student);

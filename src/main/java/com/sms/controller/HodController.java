@@ -21,7 +21,7 @@ import com.sms.security.UserPrincipal;
 import com.sms.service.AmazonClient;
 
 @RestController
-@RequestMapping("/hod")
+@RequestMapping("/")
 public class HodController {
 	
 	@Autowired
@@ -32,8 +32,8 @@ public class HodController {
     private static final Logger logger = LoggerFactory.getLogger(HodController.class);
  
     
-    @GetMapping("/me")
-    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("hod/me")
+    @PreAuthorize("hasRole('ROLE_HOD')")
     public UserSummary getHodDetails(@CurrentUser UserPrincipal currentUser) {
     	logger.info(currentUser.getName());
     	UserSummary userSummary = new UserSummary(currentUser.getId(), currentUser.getUsername(), currentUser.getName(),currentUser.getEmail(),currentUser.getNewUser());
@@ -45,7 +45,8 @@ public class HodController {
         this.amazonClient = amazonClient;
     }
 
-    @PostMapping("/uploadFile")
+    @PostMapping("hod/uploadFile")
+    @PreAuthorize("hasRole('ROLE_HOD')")
     public ResponseEntity<?> uploadFile(@CurrentUser UserPrincipal currentUser, @RequestPart(value = "file") MultipartFile file) throws IOException, AlreadyExistException {
     	logger.info(file.getOriginalFilename());
         return amazonClient.uploadFile(file);

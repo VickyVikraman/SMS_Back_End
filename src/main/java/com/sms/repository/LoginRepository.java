@@ -15,8 +15,6 @@ public interface LoginRepository extends JpaRepository<Login, Long>{
 	
 	Optional<Login> findByEmail(String email);
 	
-	Optional<Login> findByResetToken(String resetToken);
-	
 	Optional<Login> findByEmailAndResetToken(String email, Long resetToken );
 	
 	Optional<Login> findByPasswordAndUsername(String pwd, String username);

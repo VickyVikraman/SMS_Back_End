@@ -10,12 +10,12 @@ import com.sms.security.CurrentUser;
 import com.sms.security.UserPrincipal;
 
 @RestController
-@RequestMapping("/student")
+@RequestMapping("/*")
 public class StudentController {
 	
 	
-	@GetMapping("/me")
-	@PreAuthorize("hasRole('STUDENT')")
+	@GetMapping("student/me")
+	@PreAuthorize("hasRole('ROLE_STUDENT')")
     public UserSummary getStudentDetails(@CurrentUser UserPrincipal currentUser) {
     	System.out.println(currentUser.getName());
     	System.out.println(currentUser.getNewUser());

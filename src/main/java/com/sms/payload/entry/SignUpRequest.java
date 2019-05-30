@@ -22,8 +22,8 @@ public class SignUpRequest {
     @Size(min = 6, max = 20)
     private String password;
 
-    @NotBlank
     private Boolean newUser;
+
     
 	public String getName() {
 		return name;
@@ -64,5 +64,5 @@ public class SignUpRequest {
 	public void setNewUser(Boolean newUser) {
 		this.newUser = newUser;
 	}
-	    
+	   
 }

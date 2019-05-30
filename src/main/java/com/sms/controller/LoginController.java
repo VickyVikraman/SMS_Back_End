@@ -2,7 +2,6 @@ package com.sms.controller;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -15,17 +14,19 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sms.payload.entry.ChangePassword;
+import com.sms.payload.entry.ChangePasswordRequest;
 import com.sms.payload.entry.JwtAuthenticateResponse;
 import com.sms.payload.entry.LoginRequest;
-import com.sms.payload.entry.ChangePasswordRequest;
 import com.sms.security.JwtTokenProvider;
 import com.sms.service.LoginService;
 
 @RestController
+@RequestMapping("/")
 public class LoginController {
 	
     @Autowired
@@ -37,7 +38,7 @@ public class LoginController {
     @Autowired
     private LoginService loginService;
 	
-	@PostMapping("/hod/signin")
+	@PostMapping("hod/signin")
     public ResponseEntity<?> authenticateHod(@Valid @RequestBody LoginRequest loginRequest) {
 		
         Authentication authentication = authenticationManager.authenticate(
@@ -53,7 +54,7 @@ public class LoginController {
         return ResponseEntity.ok(new JwtAuthenticateResponse(jwt));
     }
 	
-	@PostMapping("/student/signin")
+	@PostMapping("student/signin")
     public ResponseEntity<?> authenticateStudent(@Valid @RequestBody LoginRequest loginRequest) {
 		
         Authentication authentication = authenticationManager.authenticate(
@@ -69,26 +70,26 @@ public class LoginController {
         return ResponseEntity.ok(new JwtAuthenticateResponse(jwt));
     }
 	
-	@GetMapping("/forgotPwd")
+	@GetMapping("forgotPwd")
 	public ResponseEntity<?> forgotPassword(@RequestParam("email") String email) throws IOException, ParseException{
 		
 		return loginService.findUserByMail(email);
 		
 	}
 	
-	@PostMapping("/verifyOtpReqst")
+	@PostMapping("verifyOtpReqst")
 	public ResponseEntity<?> verifyOtp(@RequestBody ChangePasswordRequest changePasswordRequest){
 		
 		return loginService.verifyOtpRequest(changePasswordRequest);
 	}
 	
-	@PostMapping("/reset")
+	@PostMapping("reset")
 	public ResponseEntity<?> setNewPassword(@RequestBody ChangePasswordRequest changePasswordRequest){
 		
 		return loginService.resetPassword(changePasswordRequest);
 	}
 	
-	@PostMapping("/changePwd")
+	@PostMapping("changePwd")
 	public ResponseEntity<?> changePassword(@RequestBody ChangePassword changePassword){
 		return loginService.changePassword(changePassword);
 	}

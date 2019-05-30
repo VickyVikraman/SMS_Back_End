@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sms.payload.entry.ChangePassword;
 import com.sms.payload.entry.JwtAuthenticateResponse;
 import com.sms.payload.entry.LoginRequest;
-import com.sms.payload.entry.VerifyOtpRequest;
+import com.sms.payload.entry.ChangePasswordRequest;
 import com.sms.security.JwtTokenProvider;
 import com.sms.service.LoginService;
 
@@ -77,15 +77,15 @@ public class LoginController {
 	}
 	
 	@PostMapping("/verifyOtpReqst")
-	public ResponseEntity<?> verifyOtp(@RequestBody VerifyOtpRequest verifyOtpRequest){
+	public ResponseEntity<?> verifyOtp(@RequestBody ChangePasswordRequest changePasswordRequest){
 		
-		return loginService.verifyOtpRequest(verifyOtpRequest);
+		return loginService.verifyOtpRequest(changePasswordRequest);
 	}
 	
 	@PostMapping("/reset")
-	public ResponseEntity<?> setNewPassword(@RequestParam Map<String, String > request){
+	public ResponseEntity<?> setNewPassword(@RequestBody ChangePasswordRequest changePasswordRequest){
 		
-		return loginService.resetPassword(request);
+		return loginService.resetPassword(changePasswordRequest);
 	}
 	
 	@PostMapping("/changePwd")

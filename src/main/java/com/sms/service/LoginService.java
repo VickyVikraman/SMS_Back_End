@@ -1,7 +1,6 @@
 package com.sms.service;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Service;
 import com.sms.model.Login;
 import com.sms.payload.entry.ApiResponse;
 import com.sms.payload.entry.ChangePassword;
-import com.sms.payload.entry.VerifyOtpRequest;
+import com.sms.payload.entry.ChangePasswordRequest;
 import com.sms.repository.LoginRepository;
 
 @Service
@@ -63,15 +62,18 @@ public class LoginService {
 		return ResponseEntity.ok(new ApiResponse(true,"Reset Password OTP sent to your mail id "));
 	}
 
-	public ResponseEntity<?> resetPassword(Map<String, String> request) {
-		Optional<Login> user = loginRepository.findByResetToken(request.get("token"));
+	public ResponseEntity<?> resetPassword(ChangePasswordRequest changePasswordRequest) {
+		Optional<Login> user = loginRepository.findByEmail(changePasswordRequest.getEmail());
 		if(user.isPresent()) {
-			Login newPwd = user.get();
-			newPwd.setPassword(passwordEncoder.encode(request.get("password")));
-			newPwd.setResetToken(null);
-			loginRepository.save(newPwd);
+			Login newReqstPwd = user.get();
+			String newPwd = passwordEncoder.encode(changePasswordRequest.getPassword());
+			if(newReqstPwd.getPassword().equals(newPwd)) {
+				return ResponseEntity.ok(new ApiResponse(false,"Your Old Password is same as New Password"));
+			}
+			newReqstPwd.setPassword(newPwd);
+			newReqstPwd.setResetToken(null);
+			loginRepository.save(newReqstPwd);
 			return ResponseEntity.ok(new ApiResponse(true,"Your Password was successfuly reset"));
-
 		}
 		else {
 			return ResponseEntity.ok(new ApiResponse(false,"Oops!  This is an invalid password reset link."));
@@ -82,7 +84,7 @@ public class LoginService {
 
 	public ResponseEntity<?> changePassword(ChangePassword changePassword) {
 		String oldOne = passwordEncoder.encode(changePassword.getOldPwd());
-		Optional<Login> user = loginRepository.findByPasswordAndUsername(oldOne, changePassword.getRollNo());
+		Optional<Login> user = loginRepository.findByPasswordAndUsername(oldOne, changePassword.getEmail());
 		if(user.isPresent()) {
 			Login newPwd = user.get();
 			newPwd.setPassword(changePassword.getNewPwd());
@@ -92,9 +94,9 @@ public class LoginService {
 		return ResponseEntity.ok(new ApiResponse(false,"Oops! Old password was not wrong"));
 	}
 
-	public ResponseEntity<?> verifyOtpRequest(VerifyOtpRequest verifyOtpRequest) {
+	public ResponseEntity<?> verifyOtpRequest(ChangePasswordRequest changePasswordRequest) {
 		
-		Optional<Login> verifyOtp = loginRepository.findByEmailAndResetToken(verifyOtpRequest.getEmail(), verifyOtpRequest.getOtp());
+		Optional<Login> verifyOtp = loginRepository.findByEmailAndResetToken(changePasswordRequest.getEmail(), changePasswordRequest.getOtp());
 		if(verifyOtp.isPresent()) {
 			return ResponseEntity.ok(new ApiResponse(true,"OTP is successfully verified"));
 		}

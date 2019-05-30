@@ -2,7 +2,7 @@ package com.sms.payload.entry;
 
 public class ChangePassword {
 	
-	private String rollNo;
+	private String email;
 	
 	private String oldPwd;
 	
@@ -10,12 +10,12 @@ public class ChangePassword {
 	
 	private String resetToken;
 
-	public String getRollNo() {
-		return rollNo;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setRollNo(String rollNo) {
-		this.rollNo = rollNo;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getOldPwd() {
